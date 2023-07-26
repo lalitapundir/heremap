@@ -24,6 +24,8 @@ export class MapComponent {
   private platform: any;  
   private map: any;  
   
+  public zoom:any = 6;
+
   public constructor() {  
       
   }  
@@ -41,9 +43,32 @@ export class MapComponent {
       
   }  
 
+  addMarkersToMap() {
+    var newYorkMarker = new H.map.Marker({lat:43.000000, lng:-75.000000},{data:"New York"});
+    this.map.addObject(newYorkMarker);
+
+    var floridaMarker = new H.map.Marker({lat:	27.994402, lng: 	-81.760254},{data:"Florida"});
+    this.map.addObject(floridaMarker);
+
+    var californismarker = new H.map.Marker({lat:36.778259, lng:-119.417931},{data:"California"});
+    this.map.addObject(californismarker);
+
+    var indianaMarker = new H.map.Marker({lat:	40.273502, lng: 	-86.126976},{data:"Indiana"});
+    this.map.addObject(indianaMarker);
+
+    var coloradoMarker = new H.map.Marker({lat:39.113014, lng:-105.358887},{data:"Colorado"});
+    this.map.addObject(coloradoMarker);
+
+    var texasMarker = new H.map.Marker({lat:31.000000, lng:-100.000000},{data:"Texas"});
+    this.map.addObject(texasMarker);
+}
   
   
 
+  moveMapToBerlin(){
+   // this.map.setCenter({lat:52.5159, lng:13.3777});
+    //this.map.setZoom(14);
+  }
   
   
   public ngAfterViewInit() {  
@@ -52,68 +77,37 @@ export class MapComponent {
     var defaultLayers = this.platform.createDefaultLayers();
 
     // Instantiate (and display) a map object:
-    var map = new H.Map(
+    this.map = new H.Map(
       this.mapElement.nativeElement,
       defaultLayers.vector.normal.map,
       {
-        zoom: 10,
-        center: { lat: 52.5, lng: 13.4 }
+        zoom: this.zoom,
+        center: { lat: 31.000000, lng: -100.000000 },
+       // engineType: H.map.render.RenderEngine.EngineType.P2D
       });
  
 
 
-    // let pixelRatio = window.devicePixelRatio || 1;  
-    // let defaultLayers = this.platform.createDefaultLayers({  
-    //   tileSize: pixelRatio === 1 ? 256 : 512,  
-    //   ppi: pixelRatio === 1 ? undefined : 320  
-    // });  
-  
-    
-    //   // Step 2: initialize a map - this map is centered over Berlin
-    //   this.map = new H.Map(this.mapElement.nativeElement,  
-    //   defaultLayers.normal.map, { zoom: 4, pixelRatio: pixelRatio });  
+        // add a resize listener to make sure that the map occupies the whole container
+    window.addEventListener('resize', () => this.map.getViewPort().resize());
 
-  
-    // var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));  
-    // var ui = H.ui.UI.createDefault(this.map, defaultLayers);  
-  
-    // this.map.setCenter({ lat: this.lat, lng: this.lng });  
-    // this.map.setZoom(1);  
+    //Step 3: make the map interactive
+    // MapEvents enables the event system
+    // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
 
-    //  // create map objects
-    //  var toronto = new H.map.Marker({lat:43.7,  lng:-79.4}),
-    //  boston = new H.map.Marker({lat:42.35805, lng:-71.0636}),
-    //  washington = new H.map.Marker({lat:38.8951, lng:-77.0366}),
-    //  group = new H.map.Group();
+    // Create the default UI components
+    var ui = H.ui.UI.createDefault(this.map, defaultLayers);
 
-    // // add markers to the group
-    // group.addObjects([toronto, boston, washington]);
-    // this.map.addObject(group);
+    // Now use the map as required...
+      //this.moveMapToBerlin();
+         // Create a marker for the start point:
 
-
-    // const landmarks = [
-    //   {name: 'Notre-Dame Cathedral', lat: 49.610364, lng: 6.129416, label: 'NDC'},
-    //   {name: 'Grand Ducal Palace',lat: 49.611204, lng: 6.130720, label: 'GDP'},
-    //   {name: 'Casemates du Bock', lat: 49.611847, lng: 6.131925, label: 'CdB'},
-    //   {name: 'Adolphe Bridge', lat: 49.6083, lng: 6.127109, label: 'AB'},
-    // ];
-
-    // landmarks.forEach(landmark => {
-    //   // For each marker, select the icon based on the corresponding landmark label:
-    //   const icon = new H.map.Icon('/assets/images/marker-' + landmark.label + '.png',
-    //     // Adjust the marker size to your needs: 
-    //     {size: { w: 80, h: 80 }
-    //       });
-    //   const marker = new H.map.Marker({ lat: landmark.lat, lng: landmark.lng }, 
-    //     { data: landmark.name }); //, icon: icon
-    //     this.map.addObject(marker);
-    // });
-
-  //   setTimeout(function () {
-  //     window.dispatchEvent(new Event('resize'));
-  // }, 500);
+         this.addMarkersToMap();
 
   }  
+
+
 
   // @HostListener('window:resize', ['$event'])
   // onResize(event: any) {
